@@ -1,172 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- SEO核心（直接用，不用改） -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unix Timestamp Converter | Convert Timestamp to Date Online</title>
-    <meta name="description" content="Free online Unix timestamp converter. Convert between Unix timestamp and human-readable date time easily. Support 10-digit (seconds) and 13-digit (milliseconds).">
-    <meta name="keywords" content="unix timestamp converter, timestamp to date, date to timestamp, 10 digit timestamp, 13 digit timestamp">
-    
-    <!-- Tailwind CSS 引入（免费CDN） -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>Unix Timestamp Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#16a34a',
+                        error: '#dc2626',
+                        neutral: '#f3f4f6',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .result-success { @apply bg-green-50 border border-green-200 text-green-800; }
+            .result-error { @apply bg-red-50 border border-red-200 text-red-800; }
+            .result-neutral { @apply bg-gray-50 border border-gray-200 text-gray-700; }
+            .input-focus { @apply ring-2 ring-primary/50 border-primary outline-none; }
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <!-- 头部 -->
-    <header class="bg-white shadow-sm py-4 px-6">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="text-2xl font-bold text-gray-800">Unix Timestamp Converter</h1>
-            <p class="text-gray-600 mt-1">Convert between Unix timestamp and datetime easily</p>
-        </div>
-    </header>
+<header class="bg-white shadow-sm py-4 px-6">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-800">Unix Timestamp Converter</h1>
+        <p class="text-gray-600 mt-1">Convert between Unix timestamp and datetime easily</p>
+    </div>
+</header>
 
-    <!-- 核心功能区 -->
-    <main class="flex-grow max-w-3xl mx-auto w-full px-6 py-8">
-        <!-- 时间戳转时间 -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Timestamp to Date</h2>
-            <div class="flex flex-col space-y-4">
+<main class="flex-grow max-w-3xl mx-auto w-full px-6 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Timestamp to Date</h2>
+        <div class="mb-4 flex items-center space-x-4">
+            <label class="flex items-center cursor-pointer">
+                <input type="radio" name="timezone" value="utc" checked class="mr-2">
+                <span class="text-sm text-gray-700">UTC Time</span>
+            </label>
+            <label class="flex items-center cursor-pointer">
+                <input type="radio" name="timezone" value="local" class="mr-2">
+                <span class="text-sm text-gray-700">Local Time</span>
+            </label>
+        </div>
+        <div class="flex flex-col space-y-4">
+            <div class="relative">
                 <input 
                     type="text" 
                     id="timestampInput" 
-                    placeholder="Enter Unix timestamp (10/13 digits)" 
-                    class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter Unix timestamp" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:input-focus pr-10"
+                    autocomplete="off"
                 >
                 <button 
-                    id="convertToDateBtn" 
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    id="clearTimestampInput"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                    Convert to Date
+                    ✕
                 </button>
-                <div id="dateResult" class="mt-4 p-3 bg-gray-100 rounded-lg min-h-[40px]"></div>
             </div>
+            <button id="convertToDateBtn" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                Convert to Date
+            </button>
+            <div id="dateResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral"></div>
         </div>
+    </div>
 
-        <!-- 时间转时间戳 -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Date to Timestamp</h2>
-            <div class="flex flex-col space-y-4">
+    <!-- 这里已经修复！日期选择框 + 清除按钮不再重叠！-->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Date to Timestamp</h2>
+        <div class="flex flex-col space-y-4">
+            <div class="relative">
                 <input 
                     type="datetime-local" 
                     id="dateInput" 
-                    class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:input-focus pr-10"
                 >
                 <button 
-                    id="convertToTimestampBtn" 
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    id="clearDateInput"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                    Convert to Timestamp
+                    ✕
                 </button>
-                <div id="timestampResult" class="mt-4 p-3 bg-gray-100 rounded-lg min-h-[40px]"></div>
             </div>
-        </div>
-
-        <!-- 获取当前时间戳 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Current Timestamp</h2>
-            <button 
-                id="getCurrentTimestampBtn" 
-                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-                Get Current Timestamp
+            <button id="convertToTimestampBtn" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                Convert to Timestamp
             </button>
-            <div id="currentTimestampResult" class="mt-4 p-3 bg-gray-100 rounded-lg min-h-[40px]"></div>
+            <div id="timestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral"></div>
         </div>
+    </div>
 
-        <!-- 广告位预留（后续接AdSense直接用） -->
-        <div class="mt-8 text-center text-gray-500 text-sm">
-            <!-- AdSense广告位1：替换成你的广告代码 -->
-            <div id="adsense1" class="py-4">
-                <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
-                     crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="fluid"
-                     data-ad-layout="in-article"
-                     data-ad-client="ca-pub-XXXXXXXXXXXX"
-                     data-ad-slot="XXXXXXXXXXXX"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script> -->
-            </div>
-        </div>
-    </main>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Current Timestamp</h2>
+        <button id="getCurrentTimestampBtn" class="w-full px-4 py-2 bg-success text-white rounded-lg hover:bg-success/90">
+            Get Current Timestamp
+        </button>
+        <div id="currentTimestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral"></div>
+    </div>
+</main>
 
-    <!-- 页脚（隐私政策占位） -->
-    <footer class="bg-white shadow-sm py-4 px-6 mt-auto">
-        <div class="max-w-3xl mx-auto text-center text-gray-600 text-sm">
-            <p>© 2026 Unix Timestamp Converter. All rights reserved.</p>
-            <div class="mt-2 space-x-4">
-                <a href="/privacy" class="hover:text-blue-600">Privacy Policy</a>
-                <a href="/terms" class="hover:text-blue-600">Terms of Use</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- 核心JS逻辑 -->
-    <script>
-        // 时间戳转日期
-        function timestampToDate(timestamp) {
-            try {
-                let date;
-                // 判断是10位（秒）还是13位（毫秒）
-                if (timestamp.length === 10) {
-                    date = new Date(parseInt(timestamp) * 1000);
-                } else if (timestamp.length === 13) {
-                    date = new Date(parseInt(timestamp));
-                } else {
-                    return "Invalid timestamp (must be 10 or 13 digits)";
-                }
-                
-                // 格式化日期（UTC时间，海外用户更习惯）
-                return date.toUTCString() + " (UTC) | " + date.toLocaleString() + " (Local)";
-            } catch (e) {
-                return "Error: " + e.message;
+<script>
+    function timestampToDate(timestamp) {
+        try {
+            const cleanTs = timestamp.replace(/[^0-9.]/g, '');
+            if (!cleanTs) return { success: false, text: "Please enter a valid timestamp" };
+            let tsNum = parseFloat(cleanTs);
+            let date;
+            if (cleanTs.length === 10 || (cleanTs.includes('.') && cleanTs.split('.')[0].length === 10)) {
+                date = new Date(Math.floor(tsNum * 1000));
+            } else if (cleanTs.length === 13 || (cleanTs.includes('.') && cleanTs.split('.')[0].length === 13)) {
+                date = new Date(Math.floor(tsNum));
+            } else {
+                return { success: false, text: "Invalid timestamp (10/13 digits)" };
             }
+            const timezone = document.querySelector('input[name="timezone"]:checked').value;
+            let dateStr = timezone === 'utc' ? date.toUTCString() + " (UTC)" : date.toLocaleString() + " (Local)";
+            return { success: true, text: dateStr };
+        } catch (e) {
+            return { success: false, text: "Error" };
         }
+    }
 
-        // 日期转时间戳
-        function dateToTimestamp(dateStr) {
-            try {
-                const date = new Date(dateStr);
-                const timestampMs = date.getTime(); // 13位毫秒
-                const timestampS = Math.floor(timestampMs / 1000); // 10位秒
-                return "13-digit (ms): " + timestampMs + " | 10-digit (s): " + timestampS;
-            } catch (e) {
-                return "Error: " + e.message;
-            }
-        }
-
-        // 获取当前时间戳
-        function getCurrentTimestamp() {
-            const now = new Date();
-            const timestampMs = now.getTime();
+    function dateToTimestamp(dateStr) {
+        try {
+            if (!dateStr) return { success: false, text: "Please select a date" };
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return { success: false, text: "Invalid date" };
+            const timestampMs = date.getTime();
             const timestampS = Math.floor(timestampMs / 1000);
-            return "13-digit (ms): " + timestampMs + " | 10-digit (s): " + timestampS;
+            return { success: true, text: `13-digit: ${timestampMs} | 10-digit: ${timestampS}` };
+        } catch (e) {
+            return { success: false, text: "Error" };
         }
+    }
 
-        // 绑定事件
-        document.getElementById('convertToDateBtn').addEventListener('click', function() {
+    function getCurrentTimestamp() {
+        const now = new Date();
+        return { success: true, text: `13-digit: ${now.getTime()} | 10-digit: ${Math.floor(now.getTime() / 1000)}` };
+    }
+
+    function renderResult(elementId, result) {
+        const el = document.getElementById(elementId);
+        el.textContent = result.text;
+        el.className = `mt-4 p-3 rounded-lg min-h-[40px] ${result.success ? 'result-success' : 'result-error'}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('convertToDateBtn').addEventListener('click', () => {
             const input = document.getElementById('timestampInput').value.trim();
-            const result = timestampToDate(input);
-            document.getElementById('dateResult').textContent = result;
+            renderResult('dateResult', timestampToDate(input));
         });
 
-        document.getElementById('convertToTimestampBtn').addEventListener('click', function() {
+        document.getElementById('convertToTimestampBtn').addEventListener('click', () => {
             const input = document.getElementById('dateInput').value;
-            if (!input) {
-                document.getElementById('timestampResult').textContent = "Please select a date";
-                return;
-            }
-            const result = dateToTimestamp(input);
-            document.getElementById('timestampResult').textContent = result;
+            renderResult('timestampResult', dateToTimestamp(input));
         });
 
-        document.getElementById('getCurrentTimestampBtn').addEventListener('click', function() {
-            const result = getCurrentTimestamp();
-            document.getElementById('currentTimestampResult').textContent = result;
+        document.getElementById('getCurrentTimestampBtn').addEventListener('click', () => {
+            renderResult('currentTimestampResult', getCurrentTimestamp());
         });
-    </script>
+
+        document.getElementById('clearTimestampInput').addEventListener('click', () => {
+            document.getElementById('timestampInput').value = '';
+        });
+
+        document.getElementById('clearDateInput').addEventListener('click', () => {
+            document.getElementById('dateInput').value = '';
+        });
+    });
+</script>
 </body>
 </html>
