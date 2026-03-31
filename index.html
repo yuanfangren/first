@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- SEO核心（直接用，不用改） -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Timestamp Converter | Convert Timestamp to Date Online</title>
+    <meta name="description" content="Free online Unix timestamp converter. Convert between Unix timestamp and human-readable date time easily. Support 10-digit (seconds) and 13-digit (milliseconds).">
+    <meta name="keywords" content="unix timestamp converter, timestamp to date, date to timestamp, 10 digit timestamp, 13 digit timestamp">
+    
+    <!-- Tailwind CSS 引入（免费CDN） -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Unix Timestamp Converter</title>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- 头部 -->
+    <header class="bg-white shadow-sm py-4 px-6">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-2xl font-bold text-gray-800">Unix Timestamp Converter</h1>
+            <p class="text-gray-600 mt-1">Convert between Unix timestamp and datetime easily</p>
+        </div>
+    </header>
+
+    <!-- 核心功能区 -->
+    <main class="flex-grow max-w-3xl mx-auto w-full px-6 py-8">
+        <!-- 时间戳转时间 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Timestamp to Date</h2>
+            <div class="flex flex-col space-y-4">
+                <input 
+                    type="text" 
+                    id="timestampInput" 
+                    placeholder="Enter Unix timestamp (10/13 digits)" 
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                <button 
+                    id="convertToDateBtn" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                    Convert to Date
+                </button>
+                <div id="dateResult" class="mt-4 p-3 bg-gray-100 rounded-lg min-h-[40px]"></div>
+            </div>
+        </div>
+
+        <!-- 时间转时间戳 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Date to Timestamp</h2>
+            <div class="flex flex-col space-y-4">
+                <input 
+                    type="datetime-local" 
+                    id="dateInput" 
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                <button 
+                    id="convertToTimestampBtn" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                    Convert to Timestamp
+                </button>
+                <div id="timestampResult" class="mt-4 p-3 bg-gray-100 rounded-lg min-h-[40px]"></div>
+            </div>
+        </div>
+
+        <!-- 获取当前时间戳 -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Current Timestamp</h2>
+            <button 
+                id="getCurrentTimestampBtn" 
+                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+                Get Current Timestamp
+            </button>
+            <div id="currentTimestampResult" class="mt-4 p-3 bg-gray-100 rounded-lg min-h-[40px]"></div>
+        </div>
+
+        <!-- 广告位预留（后续接AdSense直接用） -->
+        <div class="mt-8 text-center text-gray-500 text-sm">
+            <!-- AdSense广告位1：替换成你的广告代码 -->
+            <div id="adsense1" class="py-4">
+                <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
+                     crossorigin="anonymous"></script>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout="in-article"
+                     data-ad-client="ca-pub-XXXXXXXXXXXX"
+                     data-ad-slot="XXXXXXXXXXXX"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script> -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚（隐私政策占位） -->
+    <footer class="bg-white shadow-sm py-4 px-6 mt-auto">
+        <div class="max-w-3xl mx-auto text-center text-gray-600 text-sm">
+            <p>© 2026 Unix Timestamp Converter. All rights reserved.</p>
+            <div class="mt-2 space-x-4">
+                <a href="/privacy" class="hover:text-blue-600">Privacy Policy</a>
+                <a href="/terms" class="hover:text-blue-600">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 核心JS逻辑 -->
+    <script>
+        // 时间戳转日期
+        function timestampToDate(timestamp) {
+            try {
+                let date;
+                // 判断是10位（秒）还是13位（毫秒）
+                if (timestamp.length === 10) {
+                    date = new Date(parseInt(timestamp) * 1000);
+                } else if (timestamp.length === 13) {
+                    date = new Date(parseInt(timestamp));
+                } else {
+                    return "Invalid timestamp (must be 10 or 13 digits)";
+                }
+                
+                // 格式化日期（UTC时间，海外用户更习惯）
+                return date.toUTCString() + " (UTC) | " + date.toLocaleString() + " (Local)";
+            } catch (e) {
+                return "Error: " + e.message;
+            }
+        }
+
+        // 日期转时间戳
+        function dateToTimestamp(dateStr) {
+            try {
+                const date = new Date(dateStr);
+                const timestampMs = date.getTime(); // 13位毫秒
+                const timestampS = Math.floor(timestampMs / 1000); // 10位秒
+                return "13-digit (ms): " + timestampMs + " | 10-digit (s): " + timestampS;
+            } catch (e) {
+                return "Error: " + e.message;
+            }
+        }
+
+        // 获取当前时间戳
+        function getCurrentTimestamp() {
+            const now = new Date();
+            const timestampMs = now.getTime();
+            const timestampS = Math.floor(timestampMs / 1000);
+            return "13-digit (ms): " + timestampMs + " | 10-digit (s): " + timestampS;
+        }
+
+        // 绑定事件
+        document.getElementById('convertToDateBtn').addEventListener('click', function() {
+            const input = document.getElementById('timestampInput').value.trim();
+            const result = timestampToDate(input);
+            document.getElementById('dateResult').textContent = result;
+        });
+
+        document.getElementById('convertToTimestampBtn').addEventListener('click', function() {
+            const input = document.getElementById('dateInput').value;
+            if (!input) {
+                document.getElementById('timestampResult').textContent = "Please select a date";
+                return;
+            }
+            const result = dateToTimestamp(input);
+            document.getElementById('timestampResult').textContent = result;
+        });
+
+        document.getElementById('getCurrentTimestampBtn').addEventListener('click', function() {
+            const result = getCurrentTimestamp();
+            document.getElementById('currentTimestampResult').textContent = result;
+        });
+    </script>
+</body>
+</html>
