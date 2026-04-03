@@ -3,7 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unix Timestamp Converter</title>
+
+    <!-- ====================== 🚀 方案B 全球顶级 SEO 配置 ====================== -->
+    <title>Unix Timestamp Converter | Free Online Epoch Time Converter</title>
+    <meta name="description" content="Free online Unix timestamp converter to convert between epoch time and human-readable date time. Support seconds, milliseconds, UTC & local time, one-click copy.">
+    <meta name="keywords" content="Unix timestamp converter, epoch time, timestamp to date, date to timestamp, developer tool, online Unix time converter">
+    <meta name="author" content="timestamp-tool.com">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Unix Timestamp Converter | Free Online Developer Tool">
+    <meta name="twitter:description" content="Free online tool to convert Unix epoch time to date & date to timestamp. Support milliseconds/seconds, UTC/local time.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Unix Timestamp Converter | Epoch Time Online Tool">
+    <meta property="og:description" content="Free online Unix timestamp converter for developers. Easy, fast, no installation, one-click copy.">
+    <meta property="og:url" content="https://timestamp-tool.com">
+    <meta property="og:site_name" content="Unix Timestamp Converter">
+    <link rel="canonical" href="https://timestamp-tool.com">
+    <!-- ===================================================================== -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
     <script>
@@ -26,6 +44,9 @@
             .result-error { @apply bg-red-50 border border-red-200 text-red-800; }
             .result-neutral { @apply bg-gray-50 border border-gray-200 text-gray-700; }
             .input-focus { @apply ring-2 ring-primary/50 border-primary outline-none; }
+            .btn-transition { @apply transition-all duration-200 ease-in-out; }
+            .copy-btn { @apply absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary btn-transition; }
+            .clear-btn { @apply absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 btn-transition; }
         }
     </style>
 </head>
@@ -55,126 +76,153 @@
                 <input 
                     type="text" 
                     id="timestampInput" 
-                    placeholder="Enter Unix timestamp" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:input-focus pr-10"
+                    placeholder="Enter Unix timestamp (10/13 digits)" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:input-focus pr-20"
                     autocomplete="off"
                 >
-                <button 
-                    id="clearTimestampInput"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                    ✕
-                </button>
+                <button id="copyTimestampInput" class="copy-btn" title="Copy">📋</button>
+                <button id="clearTimestampInput" class="clear-btn" title="Clear">✕</button>
             </div>
-            <button id="convertToDateBtn" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
-                Convert to Date
-            </button>
-            <div id="dateResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral"></div>
+            <div class="flex space-x-3">
+                <button id="convertToDateBtn" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 btn-transition">Convert to Date</button>
+                <button id="fillCurrentTimestampBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 btn-transition">Current TS</button>
+            </div>
+            <div id="dateResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral relative">
+                <span class="result-text">Enter a timestamp and click convert</span>
+                <button class="copy-btn opacity-0 hover:opacity-100" id="copyDateResult" title="Copy result">📋</button>
+            </div>
         </div>
     </div>
 
-    <!-- 这里已经修复！日期选择框 + 清除按钮不再重叠！-->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Date to Timestamp</h2>
         <div class="flex flex-col space-y-4">
             <div class="relative">
-                <input 
-                    type="datetime-local" 
-                    id="dateInput" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:input-focus pr-10"
-                >
-                <button 
-                    id="clearDateInput"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                    ✕
-                </button>
+                <input type="datetime-local" id="dateInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:input-focus pr-20">
+                <button id="copyDateInput" class="copy-btn" title="Copy">📋</button>
+                <button id="clearDateInput" class="clear-btn" title="Clear">✕</button>
             </div>
-            <button id="convertToTimestampBtn" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
-                Convert to Timestamp
-            </button>
-            <div id="timestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral"></div>
+            <div class="flex space-x-3">
+                <button id="convertToTimestampBtn" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 btn-transition">Convert to Timestamp</button>
+                <button id="fillCurrentDateBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 btn-transition">Current Date</button>
+            </div>
+            <div id="timestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral relative">
+                <span class="result-text">Select a date and click convert</span>
+                <button class="copy-btn opacity-0 hover:opacity-100" id="copyTimestampResult" title="Copy result">📋</button>
+            </div>
         </div>
     </div>
 
     <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Current Timestamp</h2>
-        <button id="getCurrentTimestampBtn" class="w-full px-4 py-2 bg-success text-white rounded-lg hover:bg-success/90">
-            Get Current Timestamp
-        </button>
-        <div id="currentTimestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral"></div>
+        <button id="getCurrentTimestampBtn" class="w-full px-4 py-2 bg-success text-white rounded-lg hover:bg-success/90 btn-transition">Get Current Timestamp</button>
+        <div id="currentTimestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral relative">
+            <span class="result-text">Click button to get current timestamp</span>
+            <button class="copy-btn opacity-0 hover:opacity-100" id="copyCurrentTimestampResult" title="Copy result">📋</button>
+        </div>
     </div>
 </main>
 
 <script>
-    function timestampToDate(timestamp) {
-        try {
-            const cleanTs = timestamp.replace(/[^0-9.]/g, '');
-            if (!cleanTs) return { success: false, text: "Please enter a valid timestamp" };
-            let tsNum = parseFloat(cleanTs);
-            let date;
-            if (cleanTs.length === 10 || (cleanTs.includes('.') && cleanTs.split('.')[0].length === 10)) {
-                date = new Date(Math.floor(tsNum * 1000));
-            } else if (cleanTs.length === 13 || (cleanTs.includes('.') && cleanTs.split('.')[0].length === 13)) {
-                date = new Date(Math.floor(tsNum));
-            } else {
-                return { success: false, text: "Invalid timestamp (10/13 digits)" };
-            }
-            const timezone = document.querySelector('input[name="timezone"]:checked').value;
-            let dateStr = timezone === 'utc' ? date.toUTCString() + " (UTC)" : date.toLocaleString() + " (Local)";
-            return { success: true, text: dateStr };
-        } catch (e) {
-            return { success: false, text: "Error" };
+function formatDate(date, timezone = 'utc') {
+    if (timezone === 'utc') {
+        return `${date.toUTCString()} (UTC) | ${date.toISOString()}`;
+    } else {
+        return `${date.toLocaleString()} (Local) | ${date.toISOString()}`;
+    }
+}
+
+function timestampToDate(timestamp) {
+    try {
+        const cleanTs = timestamp.replace(/[^0-9.]/g, '');
+        if (!cleanTs) return { success: false, text: "Please enter a valid timestamp" };
+        
+        let tsNum = parseFloat(cleanTs);
+        if (isNaN(tsNum)) return { success: false, text: "Invalid number format" };
+
+        let date;
+        if (cleanTs.length === 10 || (cleanTs.includes('.') && cleanTs.split('.')[0].length === 10)) {
+            date = new Date(Math.floor(tsNum * 1000));
+        } else if (cleanTs.length === 13 || (cleanTs.includes('.') && cleanTs.split('.')[0].length === 13)) {
+            date = new Date(Math.floor(tsNum));
+        } else {
+            return { success: false, text: `Invalid timestamp (expected 10/13 digits)` };
         }
+
+        if (isNaN(date.getTime())) return { success: false, text: "Timestamp out of valid range" };
+        const timezone = document.querySelector('input[name="timezone"]:checked').value;
+        return { success: true, text: formatDate(date, timezone) };
+    } catch (e) {
+        return { success: false, text: "Error parsing timestamp" };
     }
+}
 
-    function dateToTimestamp(dateStr) {
-        try {
-            if (!dateStr) return { success: false, text: "Please select a date" };
-            const date = new Date(dateStr);
-            if (isNaN(date.getTime())) return { success: false, text: "Invalid date" };
-            const timestampMs = date.getTime();
-            const timestampS = Math.floor(timestampMs / 1000);
-            return { success: true, text: `13-digit: ${timestampMs} | 10-digit: ${timestampS}` };
-        } catch (e) {
-            return { success: false, text: "Error" };
-        }
+function dateToTimestamp(dateStr) {
+    try {
+        if (!dateStr) return { success: false, text: "Please select a date" };
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return { success: false, text: "Invalid date format" };
+        const ms = date.getTime();
+        const s = Math.floor(ms / 1000);
+        return { success: true, text: `13-digit (ms): ${ms} | 10-digit (s): ${s}` };
+    } catch (e) {
+        return { success: false, text: "Error converting date" };
     }
+}
 
-    function getCurrentTimestamp() {
-        const now = new Date();
-        return { success: true, text: `13-digit: ${now.getTime()} | 10-digit: ${Math.floor(now.getTime() / 1000)}` };
+function getCurrentTimestamp() {
+    const now = new Date();
+    return { success: true, text: `13-digit (ms): ${now.getTime()} | 10-digit (s): ${Math.floor(now.getTime() / 1000)}` };
+}
+
+function renderResult(id, result) {
+    const el = document.getElementById(id);
+    const text = el.querySelector('.result-text');
+    text.textContent = result.text;
+    el.className = `mt-4 p-3 rounded-lg min-h-[40px] relative ${result.success ? 'result-success' : 'result-error'}`;
+    el.querySelector('.copy-btn').classList.remove('opacity-0');
+}
+
+async function copy(text, btn) {
+    try {
+        await navigator.clipboard.writeText(text);
+        const old = btn.textContent;
+        btn.textContent = "✅";
+        setTimeout(() => btn.textContent = old, 1000);
+    } catch (e) {
+        alert("Copy failed");
     }
+}
 
-    function renderResult(elementId, result) {
-        const el = document.getElementById(elementId);
-        el.textContent = result.text;
-        el.className = `mt-4 p-3 rounded-lg min-h-[40px] ${result.success ? 'result-success' : 'result-error'}`;
-    }
+function fillNowDate() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,0);
+    const d = String(now.getDate()).padStart(2,0);
+    const hh = String(now.getHours()).padStart(2,0);
+    const mm = String(now.getMinutes()).padStart(2,0);
+    document.getElementById('dateInput').value = `${y}-${m}-${d}T${hh}:${mm}`;
+}
 
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('convertToDateBtn').addEventListener('click', () => {
-            const input = document.getElementById('timestampInput').value.trim();
-            renderResult('dateResult', timestampToDate(input));
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('convertToDateBtn').onclick = () => renderResult('dateResult', timestampToDate(document.getElementById('timestampInput').value));
+    document.getElementById('convertToTimestampBtn').onclick = () => renderResult('timestampResult', dateToTimestamp(document.getElementById('dateInput').value));
+    document.getElementById('getCurrentTimestampBtn').onclick = () => renderResult('currentTimestampResult', getCurrentTimestamp());
+    
+    document.getElementById('clearTimestampInput').onclick = () => { document.getElementById('timestampInput').value = ''; renderResult('dateResult', {success:true, text:'Enter a timestamp and click convert'}); };
+    document.getElementById('clearDateInput').onclick = () => { document.getElementById('dateInput').value = ''; renderResult('timestampResult', {success:true, text:'Select a date and click convert'}); };
 
-        document.getElementById('convertToTimestampBtn').addEventListener('click', () => {
-            const input = document.getElementById('dateInput').value;
-            renderResult('timestampResult', dateToTimestamp(input));
-        });
+    document.getElementById('fillCurrentTimestampBtn').onclick = () => { const t = String(Math.floor(Date.now()/1000)); document.getElementById('timestampInput').value = t; renderResult('dateResult', timestampToDate(t)); };
+    document.getElementById('fillCurrentDateBtn').onclick = fillNowDate;
 
-        document.getElementById('getCurrentTimestampBtn').addEventListener('click', () => {
-            renderResult('currentTimestampResult', getCurrentTimestamp());
-        });
+    document.getElementById('copyTimestampInput').onclick = () => copy(document.getElementById('timestampInput').value, document.getElementById('copyTimestampInput'));
+    document.getElementById('copyDateInput').onclick = () => copy(document.getElementById('dateInput').value, document.getElementById('copyDateInput'));
+    document.getElementById('copyDateResult').onclick = () => copy(document.querySelector('#dateResult .result-text').textContent, document.getElementById('copyDateResult'));
+    document.getElementById('copyTimestampResult').onclick = () => copy(document.querySelector('#timestampResult .result-text').textContent, document.getElementById('copyTimestampResult'));
+    document.getElementById('copyCurrentTimestampResult').onclick = () => copy(document.querySelector('#currentTimestampResult .result-text').textContent, document.getElementById('copyCurrentTimestampResult'));
 
-        document.getElementById('clearTimestampInput').addEventListener('click', () => {
-            document.getElementById('timestampInput').value = '';
-        });
-
-        document.getElementById('clearDateInput').addEventListener('click', () => {
-            document.getElementById('dateInput').value = '';
-        });
-    });
+    fillNowDate();
+});
 </script>
 </body>
 </html>
