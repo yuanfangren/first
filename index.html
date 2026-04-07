@@ -87,9 +87,8 @@
                 <button id="convertToDateBtn" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 btn-transition">Convert to Date</button>
                 <button id="fillCurrentTimestampBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 btn-transition">Current TS</button>
             </div>
-            <div id="dateResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral relative">
-                <span class="result-text">Enter a timestamp and click convert</span>
-                <button class="copy-btn opacity-0 hover:opacity-100" id="copyDateResult" title="Copy result">📋</button>
+            <div id="dateResult" class="mt-4 p-2 rounded-lg min-h-[40px] result-neutral">
+                <div class="px-2 py-0.5 text-gray-500">Enter a timestamp and click convert</div>
             </div>
         </div>
     </div>
@@ -106,9 +105,8 @@
                 <button id="convertToTimestampBtn" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 btn-transition">Convert to Timestamp</button>
                 <button id="fillCurrentDateBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 btn-transition">Current Date</button>
             </div>
-            <div id="timestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral relative">
-                <span class="result-text">Select a date and click convert</span>
-                <button class="copy-btn opacity-0 hover:opacity-100" id="copyTimestampResult" title="Copy result">📋</button>
+            <div id="timestampResult" class="mt-4 p-2 rounded-lg min-h-[40px] result-neutral">
+                <div class="px-2 py-0.5 text-gray-500">Select a date and click convert</div>
             </div>
         </div>
     </div>
@@ -116,9 +114,8 @@
     <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Current Timestamp</h2>
         <button id="getCurrentTimestampBtn" class="w-full px-4 py-2 bg-success text-white rounded-lg hover:bg-success/90 btn-transition">Get Current Timestamp</button>
-        <div id="currentTimestampResult" class="mt-4 p-3 rounded-lg min-h-[40px] result-neutral relative">
-            <span class="result-text">Click button to get current timestamp</span>
-            <button class="copy-btn opacity-0 hover:opacity-100" id="copyCurrentTimestampResult" title="Copy result">📋</button>
+        <div id="currentTimestampResult" class="mt-4 p-2 rounded-lg min-h-[40px] result-neutral">
+            <div class="px-2 py-0.5 text-gray-500">Click button to get current timestamp</div>
         </div>
     </div>
 </main>
@@ -129,17 +126,29 @@
             Contact: <a href="mailto:yunfangrenryf@163.com" class="text-primary hover:underline">yunfangrenryf@163.com</a>
         </div>
         <div>
-            <a href="privacy-policy.md" class="text-primary hover:underline">Privacy Policy</a>
+            <button id="openPrivacyBtn" class="text-primary hover:underline">Privacy Policy</button>
         </div>
     </div>
 </footer>
 
+<div id="privacyModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">Privacy Policy</h2>
+            <button id="closePrivacyBtn" class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+        </div>
+        <div id="privacyContent" class="overflow-y-auto flex-1">
+            <iframe src="privacy-policy.html" class="w-full h-full border-0 min-h-[60vh]"></iframe>
+        </div>
+    </div>
+</div>
+
 <script>
 function formatDate(date, timezone = 'utc') {
     if (timezone === 'utc') {
-        return `${date.toUTCString()} (UTC) | ${date.toISOString()}`;
+        return `${date.toUTCString()}\n${date.toISOString()}`;
     } else {
-        return `${date.toLocaleString()} (Local) | ${date.toISOString()}`;
+        return `${date.toLocaleString()}\n${date.toISOString()}`;
     }
 }
 
@@ -175,7 +184,7 @@ function dateToTimestamp(dateStr) {
         if (isNaN(date.getTime())) return { success: false, text: "Invalid date format" };
         const ms = date.getTime();
         const s = Math.floor(ms / 1000);
-        return { success: true, text: `13-digit (ms): ${ms} | 10-digit (s): ${s}` };
+        return { success: true, text: `13-digit (ms): ${ms}\n10-digit (s): ${s}` };
     } catch (e) {
         return { success: false, text: "Error converting date" };
     }
@@ -183,15 +192,30 @@ function dateToTimestamp(dateStr) {
 
 function getCurrentTimestamp() {
     const now = new Date();
-    return { success: true, text: `13-digit (ms): ${now.getTime()} | 10-digit (s): ${Math.floor(now.getTime() / 1000)}` };
+    return { success: true, text: `13-digit (ms): ${now.getTime()}\n10-digit (s): ${Math.floor(now.getTime() / 1000)}\nISO 8601: ${now.toISOString()}\nRFC 2822: ${now.toUTCString()}` };
 }
 
 function renderResult(id, result) {
     const el = document.getElementById(id);
-    const text = el.querySelector('.result-text');
-    text.textContent = result.text;
-    el.className = `mt-4 p-3 rounded-lg min-h-[40px] relative ${result.success ? 'result-success' : 'result-error'}`;
-    el.querySelector('.copy-btn').classList.remove('opacity-0');
+    const lines = result.text.split('\n').filter(l => l.trim() !== '');
+    const stateClass = result.neutral ? 'result-neutral' : result.success ? 'result-success' : 'result-error';
+
+    el.innerHTML = '';
+    el.className = `mt-4 p-2 rounded-lg min-h-[40px] ${stateClass}`;
+
+    lines.forEach(line => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between px-2 py-0.5 rounded cursor-pointer hover:bg-black/5 group';
+        const span = document.createElement('span');
+        span.textContent = line;
+        const icon = document.createElement('span');
+        icon.textContent = '📋';
+        icon.className = 'opacity-0 group-hover:opacity-50 text-xs ml-2 flex-shrink-0';
+        div.appendChild(span);
+        div.appendChild(icon);
+        div.addEventListener('click', () => copy(line, icon));
+        el.appendChild(div);
+    });
 }
 
 async function copy(text, btn) {
@@ -220,19 +244,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('convertToTimestampBtn').onclick = () => renderResult('timestampResult', dateToTimestamp(document.getElementById('dateInput').value));
     document.getElementById('getCurrentTimestampBtn').onclick = () => renderResult('currentTimestampResult', getCurrentTimestamp());
     
-    document.getElementById('clearTimestampInput').onclick = () => { document.getElementById('timestampInput').value = ''; renderResult('dateResult', {success:true, text:'Enter a timestamp and click convert'}); };
-    document.getElementById('clearDateInput').onclick = () => { document.getElementById('dateInput').value = ''; renderResult('timestampResult', {success:true, text:'Select a date and click convert'}); };
+    document.getElementById('clearTimestampInput').onclick = () => { document.getElementById('timestampInput').value = ''; renderResult('dateResult', {neutral:true, text:'Enter a timestamp and click convert'}); };
+    document.getElementById('clearDateInput').onclick = () => { document.getElementById('dateInput').value = ''; renderResult('timestampResult', {neutral:true, text:'Select a date and click convert'}); };
 
     document.getElementById('fillCurrentTimestampBtn').onclick = () => { const t = String(Math.floor(Date.now()/1000)); document.getElementById('timestampInput').value = t; renderResult('dateResult', timestampToDate(t)); };
-    document.getElementById('fillCurrentDateBtn').onclick = fillNowDate;
+    document.getElementById('fillCurrentDateBtn').onclick = () => { fillNowDate(); renderResult('timestampResult', dateToTimestamp(document.getElementById('dateInput').value)); };
 
     document.getElementById('copyTimestampInput').onclick = () => copy(document.getElementById('timestampInput').value, document.getElementById('copyTimestampInput'));
     document.getElementById('copyDateInput').onclick = () => copy(document.getElementById('dateInput').value, document.getElementById('copyDateInput'));
-    document.getElementById('copyDateResult').onclick = () => copy(document.querySelector('#dateResult .result-text').textContent, document.getElementById('copyDateResult'));
-    document.getElementById('copyTimestampResult').onclick = () => copy(document.querySelector('#timestampResult .result-text').textContent, document.getElementById('copyTimestampResult'));
-    document.getElementById('copyCurrentTimestampResult').onclick = () => copy(document.querySelector('#currentTimestampResult .result-text').textContent, document.getElementById('copyCurrentTimestampResult'));
-
     fillNowDate();
+
+    const modal = document.getElementById('privacyModal');
+document.getElementById('openPrivacyBtn').onclick = () => modal.classList.replace('hidden', 'flex');
+    document.getElementById('closePrivacyBtn').onclick = () => modal.classList.replace('flex', 'hidden');
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.replace('flex', 'hidden'); });
 });
 </script>
 </body>
