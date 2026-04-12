@@ -2,7 +2,7 @@ const fs = require('fs');
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { Readable } = require('stream');
 
-// 👇 这里改成你的域名
+// 域名
 const DOMAIN = 'https://timestamp-tool.com';
 
 const pages = [];
@@ -15,14 +15,21 @@ function scan(dir) {
 
     if (fs.statSync(fullPath).isDirectory()) {
       scan(fullPath);
-    } else if (file.endsWith('.html')) {
-      // 生成标准 URL
-      const relativeUrl = fullPath
+      return;
+    }
+
+    if (file.endsWith('.html')) {
+      let relativeUrl = fullPath
         .replace('./', '')
         .replace(/\\/g, '/');
 
-      // index.html 优先级 1.0，其他 0.8
-      const priority = relativeUrl === 'index.html' ? 1.0 : 0.8;
+      // ==============================
+      // 修复：不管路径是什么，只要文件名是 index.html → 优先级 1.0
+      // ==============================
+      let priority = 0.8;
+      if (file === 'index.html') {
+        priority = 1.0;
+      }
 
       pages.push({
         url: relativeUrl,
@@ -35,17 +42,27 @@ function scan(dir) {
 
 scan('./');
 
-// 生成 sitemap（新版无弃用写法 + 自动格式化）
+// 生成 sitemap（强制格式化 + 无弃用）
 (async () => {
   const sitemapStream = new SitemapStream({
     hostname: DOMAIN,
-    pretty: true,  // 👈 自动格式化 XML（整齐、换行、缩进）
   });
 
   const xml = await streamToPromise(
     Readable.from(pages).pipe(sitemapStream)
   );
 
-  fs.writeFileSync('./sitemap.xml', xml.toString());
-  console.log('✅ sitemap.xml 自动生成完成，共 ' + pages.length + ' 个页面');
+  // ==============================
+  // 修复：强制格式化 XML（100% 生效）
+  // ==============================
+  let formattedXml = xml.toString()
+    .replace(/></g, '>\n<')        // 自动换行
+    .replace(/<url>/g, '\n  <url>') // 缩进
+    .replace(/<\/url>/g, '  </url>\n');
+
+  fs.writeFileSync('./sitemap.xml', formattedXml);
+
+  console.log('✅ sitemap 生成完成！');
+  console.log('📄 共 ' + pages.length + ' 个页面');
+  console.log('🏠 首页 index.html 优先级已设为 1.0');
 })();
