@@ -1,0 +1,26 @@
+name: Generate Sitemap
+
+on:
+  push:
+    branches:
+      - main  # 如果你的主分支叫 master，请改成 master
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate Sitemap
+        uses: cicirello/generate-sitemap@v1
+        with:
+          base-url-path: https://timestamp-tool.com
+          # 这里配置扫描规则，默认扫描所有html
+          additional-extensions: "" 
+
+      - name: Commit and Push Sitemap
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "自动更新 sitemap.xml"
+          file_pattern: sitemap.xml
