@@ -10,29 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 拉取代码
-      # 关键修改：设置 ref 和 token，确保在正确的分支上操作并有写权限
+      # 1. 拉取代码 (关键：解决权限问题)
       - name: Check out the repository
         uses: actions/checkout@v3
         with:
-          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref }}
 
-      # 2. 设置 Node.js 环境
+      # 2. 设置 Node.js
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 3. 生成 sitemap.xml
+      # 3. 生成 sitemap (修正：去掉了导致报错的 -o 参数)
+      # 工具会默认生成 sitemap.xml
       - name: Generate sitemap
-        run: npx -y sitemap-generator-cli -u https://timestamp-tool.com/ -d . -o sitemap.xml
+        run: npx -y sitemap-generator-cli -u https://timestamp-tool.com/ -d .
 
-      # 4. 自动提交并推送更改
+      # 4. 提交推送 (关键：明确指定分支)
       - name: Commit and Push Sitemap
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          # 关键修改：明确指定要推送的分支
           branch: main
           file_pattern: sitemap.xml
-          commit_message: "chore: 自动更新 sitemap.xml"
+          commit_message: "chore: auto update sitemap"
