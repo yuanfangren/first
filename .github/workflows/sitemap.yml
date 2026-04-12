@@ -1,27 +1,40 @@
 name: Generate Sitemap
 
+# 当 main 分支有代码推送时触发
 on:
   push:
     branches:
-      - main  # 如果你的主分支叫 master，请改成 master
+      - main
 
 jobs:
-  sitemap:
+  sitemap-job:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      # 1. 拉取代码
+      - name: Check out the repository
         uses: actions/checkout@v3
 
-      - name: Generate Sitemap
-        uses: cicirello/generate-sitemap@v1
+      # 2. 设置 Node.js 环境 (用来运行生成脚本)
+      - name: Use Node.js
+        uses: actions/setup-node@v3
         with:
-          base-url-path: https://timestamp-tool.com
-          # 这里配置扫描规则，默认扫描所有html
-          additional-extensions: "" 
+          node-version: '18'
 
+      # 3. 安装 sitemap 生成工具
+      - name: Install dependencies
+        run: npm install -g sitemap-cli
+
+      # 4. 生成 sitemap.xml
+      # 注意：这里假设你的网站域名。如果是 username.github.io/repo，请修改 --url 参数
+      - name: Generate sitemap
+        run: sitemap -u https://timestamp-tool.com/ -d . -o sitemap.xml
+
+      # 5. 提交并推送更改 (使用 v5 版本修复权限问题)
       - name: Commit and Push Sitemap
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          commit_message: "自动更新 sitemap.xml"
+          # v5 版本会自动使用 GITHUB_TOKEN，无需手动配置
+          branch: main
           file_pattern: sitemap.xml
+          commit_message: "🤖 自动更新 sitemap.xml"
