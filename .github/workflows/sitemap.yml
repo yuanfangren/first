@@ -20,14 +20,14 @@ jobs:
         with:
           node-version: '18'
 
-      # 3. 生成 sitemap.xml (使用 npx 直接运行，避免安装问题)
+      # 3. 生成 sitemap.xml (更换为新工具 sitemap-generator-cli)
       # 注意：请将下面的域名修改为你自己的 GitHub Pages 域名
       - name: Generate sitemap
-        run: npx -y sitemap-cli -u https://timestamp-tool.com/ -d . -o sitemap.xml
+        run: npx -y sitemap-generator-cli https://timestamp-tool.com/
 
       # 4. 提交并推送更改
       - name: Commit and Push Sitemap
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+          commit_message: "自动更新 sitemap.xml"
           file_pattern: sitemap.xml
-          commit_message: "chore: auto update sitemap.xml"
