@@ -11,12 +11,12 @@ jobs:
 
     steps:
       # 1. 拉取代码
-      # 关键修改：必须设置 ref: ${{ github.ref }} 来确保检出的是分支而不是具体的 commit
+      # 关键修改：设置 ref 和 token，确保在正确的分支上操作并有写权限
       - name: Check out the repository
         uses: actions/checkout@v3
         with:
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
 
       # 2. 设置 Node.js 环境
       - name: Use Node.js
@@ -25,14 +25,14 @@ jobs:
           node-version: '18'
 
       # 3. 生成 sitemap.xml
-      # 注意：请确保这里的域名是你实际的 GitHub Pages 地址
       - name: Generate sitemap
-        run: npx -y sitemap-generator-cli https://timestamp-tool.com/
+        run: npx -y sitemap-generator-cli -u https://timestamp-tool.com/ -d . -o sitemap.xml
 
-      # 4. 提交并推送更改
-      # 关键修改：这里不需要手动写 branch，插件会自动识别当前分支
+      # 4. 自动提交并推送更改
       - name: Commit and Push Sitemap
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: 自动更新 sitemap.xml"
+          # 关键修改：明确指定要推送的分支
+          branch: main
           file_pattern: sitemap.xml
+          commit_message: "chore: 自动更新 sitemap.xml"
