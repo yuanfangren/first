@@ -1,39 +1,35 @@
-name: Generate Sitemap
+name: Auto Sitemap
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  sitemap-job:
+  build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-      # 1. 拉取代码
-      - name: Check out the repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
+          fetch-depth: 0
 
-      # 2. 设置 Node.js
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 20
 
-      # 3. 生成 sitemap.xml
-      # 关键修改：
-      # 1. 用引号包裹命令，防止冒号导致语法报错
-      # 2. 加上 --crawl 参数，确保能抓取到 guide.html
+      - name: Install dependencies
+        run: npm install
+
       - name: Generate sitemap
-        run: "npx -y sitemap-generator-cli -u https://timestamp-tool.com/ -d . --crawl"
+        run: node js/build-sitemap.js
 
-      # 4. 自动提交并推送
-      - name: Commit and Push Sitemap
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          branch: main
-          file_pattern: sitemap.xml
-          commit_message: "chore: 自动更新 sitemap.xml"
+      - name: Commit and push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          git commit -m "Auto update sitemap.xml" || exit 0
+          git push

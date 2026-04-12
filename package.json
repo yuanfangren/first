@@ -1,0 +1,7 @@
+{
+  "name": "static-sitemap",
+  "version": "1.0.0",
+  "dependencies": {
+    "sitemap": "^8.0.0"
+  }
+}
