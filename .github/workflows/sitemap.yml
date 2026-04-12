@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 拉取代码 (关键：解决权限问题)
+      # 1. 拉取代码
       - name: Check out the repository
         uses: actions/checkout@v3
         with:
@@ -23,15 +23,17 @@ jobs:
         with:
           node-version: '18'
 
-      # 3. 生成 sitemap (修正：去掉了导致报错的 -o 参数)
-      # 工具会默认生成 sitemap.xml
+      # 3. 生成 sitemap.xml
+      # 关键修改：
+      # 1. 用引号包裹命令，防止冒号导致语法报错
+      # 2. 加上 --crawl 参数，确保能抓取到 guide.html
       - name: Generate sitemap
-        npx -y sitemap-generator-cli -u https://timestamp-tool.com/ -d . --crawl
+        run: "npx -y sitemap-generator-cli -u https://timestamp-tool.com/ -d . --crawl"
 
-      # 4. 提交推送 (关键：明确指定分支)
+      # 4. 自动提交并推送
       - name: Commit and Push Sitemap
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
           file_pattern: sitemap.xml
-          commit_message: "chore: auto update sitemap"
+          commit_message: "chore: 自动更新 sitemap.xml"
