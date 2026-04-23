@@ -23,15 +23,152 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-200">
     <header class="bg-white dark:bg-gray-800 shadow-sm py-4 px-6 transition-colors duration-200">
-        <div class="max-w-3xl mx-auto">
-            <a href="/" class="text-primary hover:underline text-sm">← Back to Converter</a>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-2">User Guide</h1>
+        <div class="max-w-3xl mx-auto flex justify-between items-center">
+            <div>
+                <a href="/" class="text-primary hover:underline text-sm">← Back to Converter</a>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-2">User Guide</h1>
+            </div>
+            <button id="languageToggle" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 btn-transition transition-colors duration-200 text-sm">
+                中文
+            </button>
         </div>
     </header>
 
     <main class="flex-grow max-w-3xl mx-auto w-full px-6 py-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
-            <p class="text-gray-600 dark:text-gray-400">Content coming soon...</p>
+        <div class="space-y-6">
+            <!-- Introduction Section -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4" data-en="Introduction" data-cn="介绍">Introduction</h2>
+                <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                    <p class="lang-en">Unix Timestamp Converter is a free online tool for developers to convert between Unix timestamps and human-readable dates. It supports both seconds and milliseconds, UTC and local time formats, and includes one-click copy functionality.</p>
+                    <p class="lang-cn hidden">Unix时间戳转换器是一个免费在线工具，专为开发者设计，用于在Unix时间戳和人类可读的日期之间进行转换。它支持秒和毫秒、UTC和本地时间格式，并包含一键复制功能。</p>
+                </div>
+            </div>
+
+            <!-- Feature 1: Timestamp to Date -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4" data-en="Timestamp to Date Conversion" data-cn="时间戳转日期">Timestamp to Date Conversion</h2>
+                <div class="space-y-4">
+                    <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                        <p class="lang-en">Convert a Unix timestamp to a readable date and time.</p>
+                        <p class="lang-cn hidden">将Unix时间戳转换为可读的日期和时间。</p>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-2">
+                        <h3 class="font-medium text-gray-700 dark:text-gray-300" data-en="Steps:" data-cn="步骤：">Steps:</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-sm lang-en">
+                            <li>Select time zone (UTC or Local)</li>
+                            <li>Enter timestamp in the input field</li>
+                            <li>Click "Convert to Date" button</li>
+                            <li>Result will be displayed below</li>
+                        </ol>
+                        <ol class="list-decimal list-inside space-y-1 text-sm lang-cn hidden">
+                            <li>选择时区（UTC或本地时间）</li>
+                            <li>在输入框中输入时间戳</li>
+                            <li>点击"转换为日期"按钮</li>
+                            <li>结果将显示在下方</li>
+                        </ol>
+                    </div>
+
+                    <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                        <p class="lang-en">Input format: 10-digit (seconds) or 13-digit (milliseconds) timestamp.</p>
+                        <p class="lang-cn hidden">输入格式：10位（秒级）或13位（毫秒级）时间戳。</p>
+                    </div>
+
+                    <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                        <p class="lang-en">Use "Current TS" button to automatically fill with current timestamp.</p>
+                        <p class="lang-cn hidden">使用"当前时间戳"按钮自动填充当前时间戳。</p>
+                    </div>
+
+                    <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                        <p class="lang-en">Use copy (📋) and clear (✕) buttons for quick input management.</p>
+                        <p class="lang-cn hidden">使用复制（📋）和清除（✕）按钮快速管理输入。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: Date to Timestamp -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4" data-en="Date to Timestamp Conversion" data-cn="日期转时间戳">Date to Timestamp Conversion</h2>
+                <div class="space-y-4">
+                    <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                        <p class="lang-en">Convert a date and time to Unix timestamp.</p>
+                        <p class="lang-cn hidden">将日期和时间转换为Unix时间戳。</p>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-2">
+                        <h3 class="font-medium text-gray-700 dark:text-gray-300" data-en="Steps:" data-cn="步骤：">Steps:</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-sm lang-en">
+                            <li>Select date and time using datetime picker</li>
+                            <li>Click "Convert to Timestamp" button</li>
+                            <li>Result will be displayed below</li>
+                        </ol>
+                        <ol class="list-decimal list-inside space-y-1 text-sm lang-cn hidden">
+                            <li>使用日期时间选择器选择日期和时间</li>
+                            <li>点击"转换为时间戳"按钮</li>
+                            <li>结果将显示在下方</li>
+                        </ol>
+                    </div>
+
+                    <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                        <p class="lang-en">Use "Current Date" button to automatically fill with current date and time.</p>
+                        <p class="lang-cn hidden">使用"当前日期"按钮自动填充当前日期和时间。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3: Current Timestamp -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4" data-en="Get Current Timestamp" data-cn="获取当前时间戳">Get Current Timestamp</h2>
+                <div class="space-y-4">
+                    <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                        <p class="lang-en">Quickly get the current Unix timestamp in seconds.</p>
+                        <p class="lang-cn hidden">快速获取当前的Unix时间戳（秒级）。</p>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-2">
+                        <h3 class="font-medium text-gray-700 dark:text-gray-300" data-en="Steps:" data-cn="步骤：">Steps:</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-sm lang-en">
+                            <li>Click "Get Current Timestamp" button</li>
+                            <li>Current timestamp will be displayed</li>
+                            <li>Use copy button to copy to clipboard</li>
+                        </ol>
+                        <ol class="list-decimal list-inside space-y-1 text-sm lang-cn hidden">
+                            <li>点击"获取当前时间戳"按钮</li>
+                            <li>当前时间戳将显示在下方</li>
+                            <li>使用复制按钮复制到剪贴板</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4" data-en="Tips" data-cn="使用技巧">Tips</h2>
+                <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                    <ul class="space-y-2 lang-en">
+                        <li>• The tool works in both light and dark modes</li>
+                        <li>• All results can be copied with one click using the copy button</li>
+                        <li>• Timezone selection affects timestamp to date conversion only</li>
+                        <li>• Unix timestamp represents seconds since January 1, 1970 (UTC)</li>
+                    </ul>
+                    <ul class="space-y-2 lang-cn hidden">
+                        <li>• 工具支持浅色和深色模式</li>
+                        <li>• 所有结果都可以使用复制按钮一键复制</li>
+                        <li>• 时区选择仅影响时间戳转日期的转换</li>
+                        <li>• Unix时间戳表示自1970年1月1日（UTC）以来的秒数</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4" data-en="About" data-cn="关于">About</h2>
+                <div class="space-y-3 text-gray-600 dark:text-gray-400">
+                    <p class="lang-en">This is a free, open-source tool for developers. No data is sent to any server - all conversions happen in your browser.</p>
+                    <p class="lang-cn hidden">这是一个为开发者提供的免费开源工具。所有数据都在浏览器本地处理，不会发送到任何服务器。</p>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -40,5 +177,38 @@
             &copy; 2026 Unix Timestamp Converter
         </div>
     </footer>
+
+    <script>
+        // Language toggle functionality
+        let currentLang = 'en';
+
+        const languageToggle = document.getElementById('languageToggle');
+
+        languageToggle.addEventListener('click', function() {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+
+            // Update toggle button text
+            languageToggle.textContent = currentLang === 'en' ? '中文' : 'English';
+
+            // Toggle all content elements
+            const enElements = document.querySelectorAll('.lang-en');
+            const cnElements = document.querySelectorAll('.lang-cn');
+            const headers = document.querySelectorAll('[data-en][data-cn]');
+
+            // Update header text
+            headers.forEach(header => {
+                header.textContent = currentLang === 'en' ? header.dataset.en : header.dataset.cn;
+            });
+
+            // Toggle content visibility
+            enElements.forEach(el => {
+                el.classList.toggle('hidden', currentLang !== 'en');
+            });
+
+            cnElements.forEach(el => {
+                el.classList.toggle('hidden', currentLang !== 'cn');
+            });
+        });
+    </script>
 </body>
 </html>
